@@ -11,8 +11,8 @@ max_numbers = 5
 def random_list(count):
     numbers = DLList()
     for i in range(count, 0, -1):
-        numbers.shift(i)
-        # numbers.shift(randint(0, 10000))
+        # numbers.shift(i)
+        numbers.shift(randint(0, 10))
     return numbers
 
 def is_sorted(numbers):
@@ -39,4 +39,10 @@ def test_bubble_sort():
 def test_merge_sort():
     numbers = random_list(max_numbers)
     merge_sort(numbers)
+    assert is_sorted(numbers)
+
+def test_quick_sort():
+    numbers = random_list(max_numbers)
+    print_all(numbers.begin)
+    quick_sort(numbers)
     assert is_sorted(numbers)

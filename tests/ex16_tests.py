@@ -6,13 +6,13 @@ from ex16.ex16.ex16 import *
 from ex14.ex14.ex14 import DLList
 
 
-max_numbers = 5
+max_numbers = 10
 
 def random_list(count):
     numbers = DLList()
     for i in range(count, 0, -1):
         # numbers.shift(i)
-        numbers.shift(randint(0, 10))
+        numbers.shift(randint(0, 1000))
     return numbers
 
 def is_sorted(numbers):
@@ -46,3 +46,4 @@ def test_quick_sort():
     print_all(numbers.begin)
     quick_sort(numbers)
     assert is_sorted(numbers)
+    print_all(numbers.begin)

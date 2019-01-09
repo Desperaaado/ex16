@@ -89,7 +89,6 @@ def count(node):
 def find_end(node):
     if node == None:
         return None
-
     while node.next:
         node = node.next
 
@@ -98,7 +97,6 @@ def find_end(node):
 def find_head(node):
     if node == None:
         return None
-
     while node.prev:
         node = node.prev
 
@@ -109,8 +107,13 @@ def quick_sort(numbers):
     numbers.end = find_end(numbers.begin)
 
 def combine_node(node_a, node_b):
-    find_end(node_a).next = node_b
-    node_b.prev = find_end(node_a)
+    end_of_a = find_end(node_a)
+    end_of_a.next = node_b
+    node_b.prev = end_of_a
+
+    # find_end(node_a).next = node_b   ###terrible bug, this line is nothing
+    # node_b.prev = find_end(node_a)   ###terrible bug, node_b.prev is a function,
+                                       ###forever True!!
     return find_head(node_b)
 
 def print_all(node):
@@ -120,52 +123,38 @@ def print_all(node):
         return None
     else:
         node = find_head(node)
-        print(node, end=' | ')
+        print(node.value, end=' ')
     while node.next:
         node = node.next
-        print(node, end=' | ')
+        print(node.value, end=' ')
     print()
 
 def quick_sort_node(node):
-    # print_all(node)
-    if count(node) <= 1:
+    length = count(node)
+    if length <= 1:
         return node
     pivot = node
-    print('============before while=======')
-    i = 0
-    while node.next and i < 1:
-        i += 1
-        print('-'*40)
-        print_all(node)
-        # print_all(node)
-        # print('node: ', node)
-        # print('node.next: ', node.next)
+    while node.next:
         if node.next.value < pivot.value:
             nn = node.next
-            nnn = node.next.next
             nnp = node.next.prev
-            node.next.prev.next = nnn
+            nnn = node.next.next
+            
             if node.next.next:
                 node.next.next.prev = nnp
-            node.next.next = pivot
-            node.next.prev = pivot.prev
+            node.next.prev.next = nnn
+
             if pivot.prev:
-                pivot.prev.next = node.next
-            pivot.prev = node.next
-            node = nn
-            # sys.exit(1)
+                pivot.prev.next = nn
+            nn.prev = pivot.prev
+
+            nn.next = pivot
+            pivot.prev = nn
+
         else:
             node = node.next
-            sys.exit(1)
-        print('+'*40)
-        print_all(node)
-        sys.exit(1)
-        # print('node.next111: ', node.next)
 
-    print('============after while=======')
-    # print_all(node)
     if pivot.prev == None:
-        print('pivot: ', pivot)
         pivot_next = pivot.next
         pivot_next.prev = None
         pivot.next = None
@@ -176,16 +165,14 @@ def quick_sort_node(node):
         pivot.prev = None
         return combine_node(quick_sort_node(find_head(pivot_prev)), pivot)
     elif pivot.prev and pivot.next:
-        print('and pivot: ', pivot)
-
         pivot_next = pivot.next
         pivot_next.prev = None
-        pivot.next = None
-        step = combine_node(pivot, quick_sort_node(pivot_next))
-
         pivot_prev = pivot.prev
         pivot_prev.next = None
-
+        pivot.next = None
+        pivot.prev = None
+        qqq = quick_sort_node(pivot_next)
+        step = combine_node(pivot, qqq)
         return combine_node(quick_sort_node(find_head(pivot_prev)), step)
     else:
         print('ERROR!!') 
@@ -208,3 +195,21 @@ def quick_sort_node(node):
             # pivot.next = nnn
             # node.next.prev = pp
             # node.next.next = pn
+
+
+
+
+
+            # nn = node.next
+            # nnn = node.next.next
+            # nnp = node.next.prev
+            # node.next.prev.next = nnn
+            # if node.next.next:
+            #     node.next.next.prev = nnp
+            # node.next.next = pivot
+            # node.next.prev = pivot.prev
+            # if pivot.prev:
+            #     pivot.prev.next = node.next
+            # pivot.prev = node.next
+            # node = nn
+            # sys.exit(1)
